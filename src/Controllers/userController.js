@@ -12,7 +12,7 @@ const passwordFormat = /^[a-zA-Z0-9@]{8,15}$/
 const createUser = async function (req, res){
 
     try {
-        let data = req.body
+        let data = JSON.parse(req.body.data)
         let files = req.files
 
         const {fname,lname,email,phone,password,address,profileImage} = data
