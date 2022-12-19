@@ -1,7 +1,8 @@
-const userModel = require('../models/userModel')
+const userModel = require('../model/userModel')
 const bcrypt = require('bcrypt')
 const aws = require('../aws')
-const isValid=mongoose.Types.ObjectId.isValid
+const mongoose = require('mongoose')
+const isValid = mongoose.Types.ObjectId.isValid
 const emailValidator = require('email-validator')
 let regexValidation = new RegExp(/^[a-zA-Z]+([\s][a-zA-Z]+)*$/);
 let regexValidNumber = /^(?:(?:\+|0{0,2})91(\s*[\-]\s*)?|[0]?)?[6789]\d{9}$/;
@@ -11,7 +12,8 @@ const passwordFormat = /^[a-zA-Z0-9@]{8,15}$/
 const createUser = async function (req, res){
 
     try {
-        let data = JSON.parse(req.body.data)
+        let data = req.body
+        console.log(data);
         let files = req.files
 
         const {fname,lname,email,phone,password,address,profileImage} = data
@@ -50,7 +52,7 @@ const createUser = async function (req, res){
         return res.status(201).send({ status: true,msg:"Succes", data: user})
 
 
-      } catch (error) {res.status(500).send({ status: false, msg: error.message })}
+     } catch (error) {res.status(500).send({ status: false, msg: error.message })}
     }
 
 

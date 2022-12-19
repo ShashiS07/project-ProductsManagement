@@ -2,10 +2,12 @@ const express = require("express");
 const route = require("./routes/routes.js")
 const mongoose = require("mongoose")
 const app = express()
+const multer = require ("multer")
 
 mongoose.set('strictQuery', true)
 app.use(express.json())
 
+app.use(multer().any())
 
 mongoose.connect("mongodb+srv://Shashi_Shekhar_Singh:Shashi0708@myproject.mb3u3za.mongodb.net/Group24-DB?authSource=admin&replicaSet=atlas-lhj98j-shard-0&readPreference=primary&ssl=true",
 {useNewUrlParser:true})
