@@ -44,25 +44,23 @@ const createUser = async function (req, res){
         if (chkemail)return res.status(400).send({ status: false, msg: "email already exists" });
     
         //-------------------------------logic----------------------------------------------------------------------
-        let profileImageurl = await aws.uploadFile(files[0])
+        let profileImage = await aws.uploadFile(files[0])
         const salt = await bcrypt.genSalt(10);
         password = await bcrypt.hash(password, salt);
-        console.log(password);
-        const data_to_create = {fname,lname,email,profileImageurl,phone,password,address}
-        
+
+        const data_to_create = {fname,lname,email,profileImage,phone,password,address}
 
         const user = await userModel.create(data_to_create);
-        return res.status(201).send({ status: true,msg:"Succes", data: user})
+        return res.status(201).send({ status: true,message:"Succes", data: user})
 
-    } catch (error) {res.status(500).send({ status: false, msg: error.message })}
+    } catch (error) {res.status(500).send({ status: false, message: error.message })}
     }
 
+// ========================================login===============================================
 
 const login= async function(req,res){
-
-        try {
-        
-        const data= rq.body
+try {
+        const data= req.body
         if(!Object.keys(data).count==0||1){res.status(400).send({status:false,message:"plese provide email and password(they are manadatory)"})}
         
         let{email,password}=data
@@ -121,8 +119,7 @@ const getUser=async function(req,res){
   }
   }
 
-//put api
-
+//==================================update user=================================================
 
 const update=async function(req,res){
     try {
@@ -138,21 +135,15 @@ const update=async function(req,res){
             return res.status(400).send({ status: false, msg: "be in string only" })
           }
         }
-        // if (tags || subcategory) {
-        //   if (typeof (tags || subcategory) !== "object") {
-        //     return res.status(400).send({ status: false, msg: "tags/subcategory should be in array of string only" })
-        //   }
-        // }
-        let checkisDleted = await --yModel.findOne({ _id: data, isDeleted: true })
+       
+        let checkisDleted = await userModel.findOne({ _id: data, isDeleted: true })
         
         if (checkisDleted) return res.status(404).send({ status: false, msg: "no users found" })
     
     
-        let users = await --Model.findOneAndUpdate({ _id: data },
+        let users = await userModel.findOneAndUpdate({ _id: data },
           {
-            fname: fname, lname: lname, password: password, email:email
-            ,// $push: { tags: tags, subcategory: subcategory }
-          }, { new: true })
+            fname: fname, lname: lname, password: password, email:email}, { new: true })
         return res.status(200).send({ status: true, message:"successful" ,data:users })
     } catch (err) { res.status(500).send({ status: false, msg: err.message }) }
 }
