@@ -7,19 +7,12 @@ let phoneNumber = /^(?:(?:\+|0{0,2})91(\s*[\-]\s*)?|[0]?)?[6789]\d{9}$/;
 const passwordFormat = /^[a-zA-Z0-9@]{8,15}$/
 
 
-const global_validations =async(req,res,next)=>{
-
-
-}
-
-
-
 const createuser = async (req, res, next) => {
         let data = req.body
         let files = req.files
         let {fname,lname,email,phone,password,address} = data
 
-if(typeof (address) == 'string') {address = JSON.parse(address)}
+// if(typeof (address) == 'string') {address = JSON.parse(address)}
 
 //--------------------------------requirements---------------------------------------------------
 if (Object.keys(data).length == 0) return res.status(400).send({ status: false, msg: "plz provide info for user" })
@@ -50,30 +43,5 @@ next()
 }
 
 
-const login = async function (req, res,next){
-
-    // const data= req.body
-    // if(!Object.keys(data).count==0||1){res.status(400).send({status:false,message:"plese provide email and password(they are manadatory)"})}
-    // let{email,password}=data
-    // const userData= await userModel.findOne({email:email,password:password,isDeleted:false})
-    // if(!userData){res.status(404).send({status:false,message:"please provide valid email and password"})}
-
-    // next()
-}
-
-const getUser =  async function(req,res,next){
-
-
-
-}
-
-const update =  async function(req,res,next){
-
-
-
-}
-
-
-
-module.exports={createuser,login}
+module.exports={createuser}
 
