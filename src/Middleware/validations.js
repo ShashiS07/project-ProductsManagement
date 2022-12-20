@@ -126,28 +126,31 @@ try{
         data.address  = JSON.parse(data.address)
        if (data.address.shipping) {
          if (data.address.shipping.street) {
-           data.address.shipping.street = data.address.shipping.street.trim().split(" ").filter(word => word).join(" ")
+            if(!addressformat.test(data.address.shipping.street)) {return res.status(400).send({status:false,message:"Please Provide Valid Shipping Street"})}
+           data.address.shipping.street = data.address.shipping.street
          }
          if (data.address.shipping.city) {
            if (!/^[a-zA-Z][a-zA-Z\\s]+$/.test(data.address.shipping.city)) {
-             return res.status(400).send({ status: false, message: "you can not give a number in city name" })
+             return res.status(400).send({ status: false, message: "Please Provide Valid City" })
            }
            data.address.shipping.city = data.address.shipping.city
          }
          if (data.address.shipping.pincode) {
            if (!/^[1-9]\d{5}$/.test(data.address.shipping.pincode)) {
-             return res.status(400).send({ status: false, message: "please valid pincode" })
+             return res.status(400).send({ status: false, message: "please provide valid pincode" })
            }
            data.address.shipping.pincode = data.address.shipping.pincode
          }
        }
        if (data.address.billing) {
          if (data.address.billing.street) {
-           data.address.billing.street = data.address.billing.street.trim().split(" ").filter(word => word).join(" ")
+           if(!addressformat.test(data.address.billing.street)) {return res.status(400).send({status:false,message:"Please Provide Valid Billing Street"})}
+
+           data.address.shipping.street = data.address.shipping.street
          }
          if (data.address.billing.city) {
            if (!/^[a-zA-Z][a-zA-Z\\s]+$/.test(data.address.billing.city)) {
-             return res.status(400).send({ status: false, message: "you can not give a number in city name" })
+             return res.status(400).send({ status: false, message: "Please Provide Valid Citye" })
            }
            data.address.billing.city = data.address.billing.city
          }
