@@ -1,4 +1,5 @@
 const emailValidator = require("email-validator");
+const productModel = require("../Model/productModel");
 const userModel = require('../Model/userModel');
 
 let alphabets = new RegExp(/^[a-zA-Z]+([\s][a-zA-Z]+)*$/);
@@ -6,6 +7,13 @@ let phoneNumber = /^(?:(?:\+|0{0,2})91(\s*[\-]\s*)?|[0]?)?[6789]\d{9}$/;
 const passwordFormat = /^[a-zA-Z0-9@]{8,15}$/
 const addressformat=/^[a-zA-Z0-9@. ]*$/
 const pincodeformat=/^[1-9]\d{5}$/
+let numbers = /^[0-9.]+$/
+
+const isValid = function (value) {
+        if (typeof value === 'undefined' || value === null) return false
+       if (typeof value === 'string' && value.length === 0) return false
+       return true;}
+
 // =============================validation for create User======================================
 const createuser = async (req, res, next) => {
         let data = req.body
@@ -116,7 +124,7 @@ try{
         }
     }
     if(address){
-        if(typeof (address) == 'string') {address = JSON.parse(address)}
+    //    if(typeof (address) == 'string') {address = JSON.parse(address)}
         if(address.shipping){
             if(address.shipping.street){
                 if(!addressformat.test(address.shipping.street)) return res.status(400).send({status:false, message:"Please provide street in correct format"})
@@ -147,5 +155,33 @@ try{
 }
 }
 
-module.exports={createuser,updateUser}
+const Createproduct = async (req, res, next) => {
+
+        let data = req.body
+        let files = req.files
+        let { title, description, style, price, availableSizes,installments } = data;
+        if(!files[0]) {return res.status(400).send({status:false,msg:"Please provide product image file"})}
+
+        if (Object.keys(data).length == 0) return res.status(400).send({ status: false, msg: "plz provide info for product" })
+        if(!title){return res.status(400).send({status:false, message:"Please provide title"})}
+        if(!description ){return res.status(400).send({status:false, message:"Please provide description"})}
+        if(!price ){return res.status(400).send({status:false, message:"Please provide price"})}
+        if(!availableSizes){return res.status(400).send({status:false, message:"plz provide size"})}
+
+
+        if (!alphabets.test(title)) return res.status(400).send({ status: false, msg: "Please Enter Valid title" })
+        if (!isValid(description)) return res.status(400).send({ status: false, msg: "Please Enter Valid description" })
+        if (!isValid(style)) return res.status(400).send({ status: false, msg: "Please Enter Valid style" })
+        if (!numbers.test(installments)) return res.status(400).send({ status: false, msg: "Please Enter Valid installment" })
+        if (!numbers.test(price)) return res.status(400).send({ status: false, msg: "Please Enter Valid price" })
+        if (availableSizes != "S" && availableSizes != "XS" && availableSizes != "M",availableSizes != "X" && availableSizes != "L" && availableSizes != "XXL",availableSizes != "XXL" && availableSizes != "XL")
+        {return res.status(400).send({ msg: "Please provide valid title" });}
+
+        const checktitle= await productModel.findOne({title,isDeleted: false })
+        if (checktitle)return res.status(400).send({ status: false, msg: "title already exists" });
+
+        next()
+}
+
+module.exports={createuser,updateUser,createuser,Createproduct}
 
