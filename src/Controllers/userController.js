@@ -1,6 +1,7 @@
 const userModel = require('../Model/userModel')
 const bcrypt = require('bcrypt')
 const auth= require('../Middleware/auth')
+const validator= require("../Middleware/validations")
 const jwt= require("jsonwebtoken")
 const aws = require('../aws')
 const mongoose = require('mongoose')
@@ -97,30 +98,29 @@ const getUser=async function(req,res){
 //==================================update user=================================================
 
 const update=async function(req,res){
-    try {
-        let data = req.params.userId
-        let update = req.body
+try{
+    let userId=req.params.userId
+    let data=req.body
+    let files=req.files
+    let {fname,lname,email,phone,password,address,profileImage} = data
     
-        let { fname, lname,password ,phone,email } = update
-      
-        if (Object.keys(update).length == 0) { return res.status(400).send({ status: false, msg: "incomplete request data provide more data" }) }
-    
-        if (fname || lname || password || email) {
-          if (typeof (fname || lname || password || email) !== "string") {
-            return res.status(400).send({ status: false, msg: "be in string only" })
-          }
-        }
-       
-        let checkisDleted = await userModel.findOne({ _id: data, isDeleted: true })
-        
-        if (checkisDleted) return res.status(404).send({ status: false, msg: "no users found" })
-    
-    
-        let users = await userModel.findOneAndUpdate({ _id: data },
-          {
-            fname: fname, lname: lname, password: password, email:email}, { new: true })
-        return res.status(200).send({ status: true, message:"successful" ,data:users })
-    } catch (err) { res.status(500).send({ status: false, msg: err.message }) }
+    if(typeof (address) == 'string') {address = JSON.parse(address)}
+
+    if(password){
+      const salt = await bcrypt.genSalt(10);
+      password = await bcrypt.hash(password, salt);
+    }
+    if(files && files.length > 0){
+      let profileImage = await aws.uploadFile(files[0])
+      data.profileImage=profileImage
+    }
+    console.log(data)
+    let updateuser=await userModel.findOneAndUpdate({_id:userId},{$set:{data}},{new:true})
+    return res.status(200).send({status:false, message:"Updated Successfully",data:updateuser})
+}catch(error){
+  return res.status(500).send({status:false,error:error.message})
+}
+
 }
     
      
