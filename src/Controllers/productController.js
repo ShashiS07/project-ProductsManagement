@@ -1,6 +1,7 @@
 const aws = require('../aws')
 const mongoose = require('mongoose');
 const productModel = require('../Model/productModel');
+const ObjectId = require('mongoose').Types.ObjectId;
 
 
 
@@ -49,7 +50,7 @@ const getProducts = async function (req, res) {
 
 const getproductById = async (req, res) => {
     try {
-        let productid1 = req.params.bookId
+        let productid1 = req.params.productId
         if (!productid1)
             return res.status(400).send({ status: false, msg: "please give product id" })
         if (!mongoose.Types.ObjectId.isValid(prductid1))
@@ -81,7 +82,7 @@ const updateProductById = async (req, res) => {
 
         if (!productFound) {return res.status(404).send({ status: false, msg: "There is no product exist with this id" });}
 
-        let updateBody = JSON.parse(req.body.data)
+        let updateBody =req.body
         let files = req.files
         let producturl
         if(files[0]) {producturl = await aws.uploadFile(files[0])}

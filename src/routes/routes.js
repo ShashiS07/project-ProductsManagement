@@ -16,7 +16,7 @@ router.get('/products',getProducts)
 router.get('/products/:productId',getproductById)
 
 router.put('/user/:userId/profile',auth.authentication,update)
-router.put('/products/:productId',updateProductById,)
+router.put('/products/:productId',updateProductById)
 
 
 

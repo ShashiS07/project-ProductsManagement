@@ -2,7 +2,7 @@ const emailValidator = require("email-validator");
 const productModel = require("../Model/productModel");
 const userModel = require('../Model/userModel');
 
-let alphabets = new RegExp(/^[a-zA-Z]+([\s][a-zA-Z]+)*$/);
+let alphabets = /[A-Za-z]/;
 let phoneNumber = /^(?:(?:\+|0{0,2})91(\s*[\-]\s*)?|[0]?)?[6789]\d{9}$/;
 const passwordFormat = /^[a-zA-Z0-9@]{8,15}$/
 const addressformat=/^[a-zA-Z0-9@. ]*$/
@@ -174,8 +174,8 @@ const Createproduct = async (req, res, next) => {
         if (!isValid(style)) return res.status(400).send({ status: false, msg: "Please Enter Valid style" })
         if (!numbers.test(installments)) return res.status(400).send({ status: false, msg: "Please Enter Valid installment" })
         if (!numbers.test(price)) return res.status(400).send({ status: false, msg: "Please Enter Valid price" })
-        if (availableSizes != "S" && availableSizes != "XS" && availableSizes != "M",availableSizes != "X" && availableSizes != "L" && availableSizes != "XXL",availableSizes != "XXL" && availableSizes != "XL")
-        {return res.status(400).send({ msg: "Please provide valid title" });}
+        if (availableSizes != "S" && availableSizes != "XS" && availableSizes != "M" && availableSizes != "X" && availableSizes != "L" && availableSizes != "XXL" && availableSizes != "XXL" && availableSizes != "XL")
+        {return res.status(400).send({ msg: "Please provide valid size" });}
 
         const checktitle= await productModel.findOne({title,isDeleted: false })
         if (checktitle)return res.status(400).send({ status: false, msg: "title already exists" });
