@@ -102,20 +102,17 @@ try{
     let userId=req.params.userId
     let data=req.body
     let files=req.files
-    let {fname,lname,email,phone,password,address,profileImage} = data
-    console.log(address);
+    let {password} = data
     
-    if(typeof (address) == 'string') {address = JSON.stringify(address)}
-
     if(password){
       const salt = await bcrypt.genSalt(10);
-      password = await bcrypt.hash(password, salt);
+      data.password = await bcrypt.hash(password, salt);
     }
     if(files && files.length > 0){
       let profileImage = await aws.uploadFile(files[0])
       data.profileImage=profileImage
     }
-    //console.log(data)
+
     let updateuser=await userModel.findOneAndUpdate({_id:userId},{$set:data},{new:true})
 
     return res.status(200).send({status:false, message:"Updated Successfully",data:updateuser})

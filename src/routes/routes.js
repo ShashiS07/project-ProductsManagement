@@ -2,6 +2,7 @@ const express = require('express')
 const router=express.Router()
 const {createuser,updateUser,Createproduct} = require('../Middleware/validations')
 const auth=require('../Middleware/auth')
+const validator=require('../Middleware/validations')
 const {createUser,getUser,login,update} = require('../Controllers/userController')
 const {createproduct,updateProductById,getProducts,getproductById} = require('../Controllers/productController')
 
@@ -15,7 +16,7 @@ router.get('/user/:userId/profile',auth.authentication,getUser)
 router.get('/products',getProducts)
 router.get('/products/:productId',getproductById)
 
-router.put('/user/:userId/profile',auth.authentication,update)
+router.put('/user/:userId/profile',auth.authentication,validator.updateUser,update)
 router.put('/products/:productId',updateProductById)
 
 

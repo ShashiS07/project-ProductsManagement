@@ -95,8 +95,7 @@ next()
 const updateUser=async function(req,res,next){
 try{
     let data=req.body
-    console.log(data)
-    let {fname,lname,email,phone,password,address} = data
+    let {fname,lname,email,phone,password} = data
     if (Object.keys(data).length == 0) return res.status(400).send({ status: false, msg: "plz provide info for user to update"})
     if(fname){
         if (!alphabets.test(fname)) return res.status(400).send({ status: false, msg: "Please Enter Valid First Name" })
@@ -123,31 +122,44 @@ try{
             return res.status(400).send({status:false, message:"Please Insert Correct Password"})
         }
     }
-    if(address){
-    //    if(typeof (address) == 'string') {address = JSON.parse(address)}
-        if(address.shipping){
-            if(address.shipping.street){
-                if(!addressformat.test(address.shipping.street)) return res.status(400).send({status:false, message:"Please provide street in correct format"})
-            }
-            if(address.shipping.city){
-                if(!alphabets.test(address.shipping.city)) return res.status(400).send({status:false, message:"Please provide city in correct format"})
-            }
-            if(address.shipping.pincode){
-                if(!pincodeformat.test(address.shipping.pincode)) return res.status(400).send({status:false, message:"Please provide pincode in correct format"})
-            }
-        }
-        if(address.billing){
-            if(address.billing.street){
-                if(!addressformat.test(address.billing.street)) return res.status(400).send({status:false, message:"Please provide street in correct format"})
-            }
-            if(address.billing.city){
-                if(!alphabets.test(address.billing.city)) return res.status(400).send({status:false, message:"Please provide city in correct format"})
-            }
-            if(address.billing.pincode){
-                if(!pincodeformat.test(address.billing.pincode)) return res.status(400).send({status:false, message:"Please provide pincode in correct format"})
-            }
-        }
-    }
+    if (data.address) {
+        data.address  = JSON.parse(data.address)
+       if (data.address.shipping) {
+         if (data.address.shipping.street) {
+           data.address.shipping.street = data.address.shipping.street.trim().split(" ").filter(word => word).join(" ")
+         }
+         if (data.address.shipping.city) {
+           if (!/^[a-zA-Z][a-zA-Z\\s]+$/.test(data.address.shipping.city)) {
+             return res.status(400).send({ status: false, message: "you can not give a number in city name" })
+           }
+           data.address.shipping.city = data.address.shipping.city
+         }
+         if (data.address.shipping.pincode) {
+           if (!/^[1-9]\d{5}$/.test(data.address.shipping.pincode)) {
+             return res.status(400).send({ status: false, message: "please valid pincode" })
+           }
+           data.address.shipping.pincode = data.address.shipping.pincode
+         }
+       }
+       if (data.address.billing) {
+         if (data.address.billing.street) {
+           data.address.billing.street = data.address.billing.street.trim().split(" ").filter(word => word).join(" ")
+         }
+         if (data.address.billing.city) {
+           if (!/^[a-zA-Z][a-zA-Z\\s]+$/.test(data.address.billing.city)) {
+             return res.status(400).send({ status: false, message: "you can not give a number in city name" })
+           }
+           data.address.billing.city = data.address.billing.city
+         }
+         if (data.address.billing.pincode) {
+           if (!/^[1-9]\d{5}$/.test(data.address.billing.pincode)) {
+             return res.status(400).send({ status: false, message: "please valid pincode" })
+           }
+           data.address.billing.pincode = data.address.billing.pincode
+         }
+       }
+     }
+ 
     next()
 
 }catch(error){
