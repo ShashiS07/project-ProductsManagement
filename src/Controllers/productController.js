@@ -97,4 +97,4 @@ const updateProductById = async (req, res) => {
     }
 };
 
-module.exports = {createproduct,getProducts,updateProductById}
+module.exports = {createproduct,getProducts,updateProductById,getproductById}
