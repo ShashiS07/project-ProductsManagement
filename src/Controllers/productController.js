@@ -30,7 +30,7 @@ const createproduct = async function (req, res){
 const getproductbyquery=async function(req,res){
     try{
         let data=req.query
-    
+
         let{size,name,priceGreaterThan,priceLessThan,priceSort}=data
         let filter={isDeleted:false}
         if(size){
@@ -47,19 +47,19 @@ const getproductbyquery=async function(req,res){
             if (!/^([0-9]{0,15}((.)[0-9]{0,2}))$/.test(priceLessThan)) {
                 return res.status(400).send({ status: false, message: " please enter valid price " })
             }
-            filter['price'] = { $lt: priceLessThan }
+            filter['price'] = { $lte: priceLessThan }
         }
         
         if (priceGreaterThan) {
             if (!/^([0-9]{0,15}((.)[0-9]{0,2}))$/.test(priceGreaterThan)) {
                 return res.status(400).send({ status: false, message: " please enter valid price " })
             }
-            filter['price'] = { $gt: priceGreaterThan }
+            filter['price'] = { $gte: priceGreaterThan }
         }
         if (priceGreaterThan && priceLessThan) {
             filter['price'] = { $lt: priceLessThan, $gt: priceGreaterThan }
         }
-       
+       console.log(priceSort);
         if(priceSort){
         if(!priceSort==1 || !priceSort==-1){
             return res.status(400).send({status:false,message:"Please enter valid pricesort"})
