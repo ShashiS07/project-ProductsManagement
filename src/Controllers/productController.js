@@ -91,7 +91,7 @@ const updateProductById = async (req, res) => {
 
         let updateProduct = await productModel.findOneAndUpdate({ _id: paramsId }, { title: title, description: description, price: price, productImage: producturl, style: style, availableSizes: availableSizes, installments: installments }, { new: true })
 
-        return res.status(200).send({ status: true, message: 'product updated successfully', data: updateProduct });
+        return res.status(200).send({ status: true, message: 'Success', data: updateProduct });
 
     } catch (err) {
         return res.status(500).send({ message: err.message });

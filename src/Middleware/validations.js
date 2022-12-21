@@ -201,7 +201,39 @@ const Createproduct = async (req, res, next) => {
 
 const updateProduct = async (req, res, next) => {
 
+        let data = req.body
+
+        if (Object.keys(data).length == 0) return res.status(400).send({ status: false, msg: "plz provide info to update product" })
+
+        let { title, description, style, price, availableSizes,installments,isFreeShipping} = data;
+
+        if (title){
+                if (!alphabets.test(title)) return res.status(400).send({ status: false, msg: "Please Enter Valid title" })
+        }
+        if (description){
+                if (!isValid(description)) return res.status(400).send({ status: false, msg: "Please Enter Valid description" })
+        }
+        if (style){
+                if (!isValid(style)) return res.status(400).send({ status: false, msg: "Please Enter Valid style" })
+        }
+        if (price){
+                if (!numbers.test(price)) return res.status(400).send({ status: false, msg: "Please Enter Valid price" })
+        }
+        if (availableSizes){
+                if (availableSizes != "S" && availableSizes != "XS" && availableSizes != "M" && availableSizes != "X" && availableSizes != "L" && availableSizes != "XXL" && availableSizes != "XXL" && availableSizes != "XL")
+                {return res.status(400).send({ msg: "Please provide valid size" });}
+        }
+        if (installments){
+                if (!numbers.test(installments)) return res.status(400).send({ status: false, msg: "Please Enter Valid installment" })
+        }
+        
+
+        const checktitle= await productModel.findOne({title,isDeleted: false })
+        if (checktitle)return res.status(400).send({ status: false, msg: "title already exists" });
+
+        next()
+        
 }
 
-module.exports={createuser,updateUser,Createproduct}
+module.exports={createuser,updateUser,Createproduct,updateProduct}
 
