@@ -98,4 +98,25 @@ const updateProductById = async (req, res) => {
     }
 };
 
-module.exports = {createproduct,getProducts,updateProductById,getproductById}
+const deletedProduct = async function (req, res) {
+    try {
+        let productId = req.params.productId
+        if (!mongoose.Types.ObjectId.isValid(productId))
+            return res.status(400).send({ status: false, msg: "please enter valid productid" })
+        const savedata = await productModel.findById(productId)
+        if(!savedata) { return res.status(404).send({status:false, message: "product not found so can't update anything" }) }
+        
+        if (savedata.isDeleted == true) {
+            return res.status(200).send({ status: true, message: "product is already deleted" })
+        }
+
+    const deleteproduct = await productModel.findByIdAndUpdate({ _id: productId }, { $set: { isDeleted: true, deletedAt: Date.now() } });
+       return res.status(200).send({ status: true, message: "product has been deleted successfully" })
+
+
+    }catch(error){
+        res.status(500).send({status: false, msg:error.message});
+
+    }
+}
+module.exports = {createproduct,getProducts,updateProductById,getproductById,deletedProduct}

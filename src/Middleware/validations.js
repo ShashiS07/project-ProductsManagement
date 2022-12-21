@@ -199,5 +199,9 @@ const Createproduct = async (req, res, next) => {
         next()
 }
 
+const updateProduct = async (req, res, next) => {
+
+}
+
 module.exports={createuser,updateUser,Createproduct}
 
