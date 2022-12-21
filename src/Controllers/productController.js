@@ -4,7 +4,7 @@ const productModel = require('../Model/productModel');
 const ObjectId = require('mongoose').Types.ObjectId;
 
 
-
+// ==============================create product============================================
 const createproduct = async function (req, res){
 
     try {
@@ -26,28 +26,60 @@ const createproduct = async function (req, res){
     }
 
 }
-
-const getProducts = async function (req, res) {
-    try {
-      const data = req.query
-      if (Object.keys(data).length == 0) { res.status(400).send({ status: false, message: "please provide request data" }) }
-      let { size, name, priceLessThan } = data
-  
-      if (!size) return res.status(400).send({ status: false, message: "size is required" })
-      if (!name) return res.status(400).send({ status: false, message: "Product name is required" })
-      if (!priceLessThan) return res.status(400).send({ status: false, message: "please provide price range" })
-  
-      const productData = await productModel.find({ $and: [{ availableSizes:size }, { title:name },{price:{$lte:priceLessThan }}, { isDeleted: false }] }).sort({ priceSort: 1 })
-      if (!productData) { res.status(404).send({ status: false, message: "no data found" }) }
-  
-      res.status(200).send({ status: true, message: "Success", data: productData })
-  
-    } catch (err) {
-      res.status(500).send({ status: false, message: err.message })
+// =============================get all product=============================================
+const getproductbyquery=async function(req,res){
+    try{
+        let data=req.query
+    
+        let{size,name,priceGreaterThan,priceLessThan,priceSort}=data
+        let filter={isDeleted:false}
+        if(size){
+            if(!['S', 'XS', 'M', 'X', 'L', 'XXL', 'XL'].includes(size)){
+                return res.status(400).send({status:false,message:"Size is not valid"})
+            }
+            filter.availableSizes = { $all: size }
+        }
+        if(name){
+            if(!/^[a-zA-Z0-9.,-_;: ]+$/.test(name)) return res.status(400).send({status:false,message:"Please provide valid name"})
+            filter["title"] = { $regex: name }
+        }
+        if (priceLessThan) {
+            if (!/^([0-9]{0,15}((.)[0-9]{0,2}))$/.test(priceLessThan)) {
+                return res.status(400).send({ status: false, message: " please enter valid price " })
+            }
+            filter['price'] = { $lt: priceLessThan }
+        }
+        
+        if (priceGreaterThan) {
+            if (!/^([0-9]{0,15}((.)[0-9]{0,2}))$/.test(priceGreaterThan)) {
+                return res.status(400).send({ status: false, message: " please enter valid price " })
+            }
+            filter['price'] = { $gt: priceGreaterThan }
+        }
+        if (priceGreaterThan && priceLessThan) {
+            filter['price'] = { $lt: priceLessThan, $gt: priceGreaterThan }
+        }
+       
+        if(priceSort){
+        if(!priceSort==1 || !priceSort==-1){
+            return res.status(400).send({status:false,message:"Please enter valid pricesort"})
+        }
+        }else{
+            priceSort=1
+        }
+    
+        let finalData = await productModel.find(filter).sort({ price: priceSort })
+            if (finalData.length == 0) {
+                return res.status(200).send({ status: false, message: "No product available" })
+            }
+            return res.status(200).send({ status: true, message: "Success", data: finalData })
+    
+    }catch(error){
+        return res.send(500).send({status:false, erorr:message.error})
     }
-  }
+    }
 
-
+// =======================get product by Id================================================
 const getproductById = async (req, res) => {
     try {
         let productid1 = req.params.productId
@@ -68,7 +100,7 @@ const getproductById = async (req, res) => {
     }
   }
 
-
+// =============================update product=====================================
 const updateProductById = async (req, res) => {
 
     try {
@@ -97,7 +129,7 @@ const updateProductById = async (req, res) => {
         return res.status(500).send({ message: err.message });
     }
 };
-
+// =====================================delete product======================================
 const deletedProduct = async function (req, res) {
     try {
         let productId = req.params.productId
@@ -119,4 +151,7 @@ const deletedProduct = async function (req, res) {
 
     }
 }
-module.exports = {createproduct,getProducts,updateProductById,getproductById,deletedProduct}
+
+// ======================================================================================
+
+module.exports = {createproduct,updateProductById,getproductById,deletedProduct,getproductbyquery}
