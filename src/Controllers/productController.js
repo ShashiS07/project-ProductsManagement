@@ -37,13 +37,13 @@ const getProducts = async function (req, res) {
       if (!name) return res.status(400).send({ status: false, message: "Product name is required" })
       if (!priceLessThan) return res.status(400).send({ status: false, message: "please provide price range" })
   
-      const productData = await productModel.find({ $and: [{ size }, { name }, { priceLessThan }, { isDeleted: false }] }).sort({ priceSort: 1 })
+      const productData = await productModel.find({ $and: [{ availableSizes:size }, { title:name },{price:{$lte:priceLessThan }}, { isDeleted: false }] }).sort({ priceSort: 1 })
       if (!productData) { res.status(404).send({ status: false, message: "no data found" }) }
   
-      res.ststus(200).send({ status: true, message: "Success", data: productData })
+      res.status(200).send({ status: true, message: "Success", data: productData })
   
     } catch (err) {
-      res.ststus(500).send({ status: false, message: err.message })
+      res.status(500).send({ status: false, message: err.message })
     }
   }
 
