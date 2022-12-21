@@ -96,12 +96,13 @@ const updateUser=async function(req,res,next){
 try{
     let data=req.body
     let {fname,lname,email,phone,password} = data
-    if (Object.keys(data).length == 0) return res.status(400).send({ status: false, msg: "plz provide info for user to update"})
+    if (Object.keys(data).length == 0) return res.status(400).send({ status: false, msg: "please provide info for user to update"})
+    
     if(fname){
-        if (!alphabets.test(fname)) return res.status(400).send({ status: false, msg: "Please Enter Valid First Name" })
+        if (fname=="" || !alphabets.test(fname)) return res.status(400).send({ status: false, msg: "Please Enter Valid First Name" })
     }
     if(lname){
-        if (!alphabets.test(lname)) return res.status(400).send({ status: false, msg: "Please Enter Valid Last Name" })
+        if (lname=="" || !alphabets.test(lname)) return res.status(400).send({ status: false, msg: "Please Enter Valid Last Name" })
     }
     if(email){
         if (!emailValidator.validate(email)){ return res.status(400).send({ status: false, msg: "Please Enter Valid email ID" })
@@ -198,5 +199,5 @@ const Createproduct = async (req, res, next) => {
         next()
 }
 
-module.exports={createuser,updateUser,createuser,Createproduct}
+module.exports={createuser,updateUser,Createproduct}
 

@@ -53,7 +53,7 @@ const getproductById = async (req, res) => {
         let productid1 = req.params.productId
         if (!productid1)
             return res.status(400).send({ status: false, msg: "please give product id" })
-        if (!mongoose.Types.ObjectId.isValid(prductid1))
+        if (!mongoose.Types.ObjectId.isValid(productid1))
             return res.status(400).send({ status: false, msg: "please enter valid productid" })
   
         let product = await productModel.findById(productid1)
