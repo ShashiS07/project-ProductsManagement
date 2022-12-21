@@ -4,7 +4,7 @@ const productModel = require('../Model/productModel');
 const ObjectId = require('mongoose').Types.ObjectId;
 
 
-
+// ==============================create product============================================
 const createproduct = async function (req, res){
 
     try {
@@ -26,7 +26,7 @@ const createproduct = async function (req, res){
     }
 
 }
-
+// =============================get all product=============================================
 const getproductbyquery=async function(req,res){
     try{
         let data=req.query
@@ -79,8 +79,7 @@ const getproductbyquery=async function(req,res){
     }
     }
 
-
-
+// =======================get product by Id================================================
 const getproductById = async (req, res) => {
     try {
         let productid1 = req.params.productId
@@ -101,7 +100,7 @@ const getproductById = async (req, res) => {
     }
   }
 
-
+// =============================update product=====================================
 const updateProductById = async (req, res) => {
 
     try {
@@ -130,7 +129,7 @@ const updateProductById = async (req, res) => {
         return res.status(500).send({ message: err.message });
     }
 };
-
+// =====================================delete product======================================
 const deletedProduct = async function (req, res) {
     try {
         let productId = req.params.productId
@@ -153,6 +152,6 @@ const deletedProduct = async function (req, res) {
     }
 }
 
-
+// ======================================================================================
 
 module.exports = {createproduct,updateProductById,getproductById,deletedProduct,getproductbyquery}
