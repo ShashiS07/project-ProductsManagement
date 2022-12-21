@@ -1,5 +1,7 @@
 const jwt=require("jsonwebtoken");
 const userModel = require("../Model/userModel");
+const mongoose = require('mongoose')
+
 
 const authentication=async function(req,res,next){
 try{
@@ -28,7 +30,7 @@ const authorization=async function(req,res,next){
 try{
     let userId=req.params.userId
     if(!userId) return res.send(400).send({status:false,message:"UserId is not present"})
-    if(!isValid(userId)) return res.send(400).send({status:false,message:"userId is not valid"})
+    if(!mongoose.Types.ObjectId.isValid(userId)) return res.send(400).send({status:false,message:"userId is not valid"})
     let userdetails=await userModel.findById({_id:userId})
     if(!userdetails) return res.status(404).send({status:false,message:"user not found"})
 
@@ -37,7 +39,7 @@ try{
     next()
 
 }catch(error){
-    return res.send(500).send({status:false,error:error.message})
+    return res.status(500).send({status:false,error:error.message})
 }
 }
 

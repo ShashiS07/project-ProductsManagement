@@ -115,7 +115,7 @@ try{
 
     let updateuser=await userModel.findOneAndUpdate({_id:userId},{$set:data},{new:true})
 
-    return res.status(200).send({status:true, message:"Updated Successfully",data:updateuser})
+    return res.status(200).send({status:true, message:"Update user profile is successful",data:updateuser})
 }catch(error){
   return res.status(500).send({status:false,error:error.message})
 }

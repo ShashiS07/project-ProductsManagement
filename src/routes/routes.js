@@ -15,7 +15,7 @@ router.get('/user/:userId/profile',auth.authentication,getUser)
 router.get('/products',getproductbyquery)
 router.get('/products/:productId',getproductById)
 
-router.put('/user/:userId/profile',auth.authentication,updateUser,update)
+router.put('/user/:userId/profile',auth.authentication,auth.authorization,updateUser,update)
 router.put('/products/:productId',updateProduct,updateProductById)
 
 router.delete('/products/:productId',deletedProduct)
