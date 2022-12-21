@@ -119,9 +119,8 @@ const updateProductById = async (req, res) => {
         let producturl
         if(files[0]) {producturl = await aws.uploadFile(files[0])}
 
-        let { title, description, price, style, availableSizes, installments } = updateBody
+        let updateProduct = await productModel.findOneAndUpdate({ _id: paramsId },{$set:updateBody},{ new: true })
 
-        let updateProduct = await productModel.findOneAndUpdate({ _id: paramsId }, { title: title, description: description, price: price, productImage: producturl, style: style, availableSizes: availableSizes, installments: installments }, { new: true })
 
         return res.status(200).send({ status: true, message: 'Success', data: updateProduct });
 

@@ -95,7 +95,10 @@ next()
 const updateUser=async function(req,res,next){
 try{
     let data=req.body
-    let {fname,lname,email,phone,password} = data
+    let {fname,lname,email,phone,password,...rest} = data
+
+    if (Object.keys(rest).length>0){return res.status(400).send({ status: false, msg: "Please enter valid key to update" })}
+
     if (Object.keys(data).length == 0) return res.status(400).send({ status: false, msg: "please provide info for user to update"})
     
     if(fname){
@@ -205,8 +208,10 @@ const updateProduct = async (req, res, next) => {
 
         if (Object.keys(data).length == 0) return res.status(400).send({ status: false, msg: "plz provide info to update product" })
 
-        let { title, description, style, price, availableSizes,installments,isFreeShipping} = data;
+        let { title, description, style, price, availableSizes,installments,isFreeShipping ,...rest} = data;
 
+        if (Object.keys(rest).length>0){return res.status(400).send({ status: false, msg: "Please enter valid key to update" })}
+            
         if (title){
                 if (!alphabets.test(title)) return res.status(400).send({ status: false, msg: "Please Enter Valid title" })
         }
@@ -226,6 +231,9 @@ const updateProduct = async (req, res, next) => {
         if (installments){
                 if (!numbers.test(installments)) return res.status(400).send({ status: false, msg: "Please Enter Valid installment" })
         }
+
+        
+        
         
 
         const checktitle= await productModel.findOne({title,isDeleted: false })
