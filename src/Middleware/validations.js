@@ -253,5 +253,5 @@ const updateProduct = async (req, res, next) => {
 
 }
 
-module.exports = { createuser, updateUser, Createproduct, updateProduct }
+module.exports = { createuser, updateUser, Createproduct, updateProduct,isValid }
 

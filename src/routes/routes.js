@@ -4,12 +4,14 @@ const {createuser,updateUser,Createproduct,updateProduct} = require('../Middlewa
 const auth=require('../Middleware/auth')
 const {createUser,getUser,login,update} = require('../Controllers/userController')
 const {createproduct,updateProductById,getproductById,deletedProduct,getproductbyquery} = require('../Controllers/productController')
+const {createCart}=require("../Controllers/cartController")
 
 
 
 router.post('/register',createuser,createUser)
 router.post('/login',login)
 router.post('/products',Createproduct,createproduct)
+router.post('/users/:userId/cart',auth.authentication,auth.authorization,createCart)
 
 router.get('/user/:userId/profile',auth.authentication,getUser)
 router.get('/products',getproductbyquery)
