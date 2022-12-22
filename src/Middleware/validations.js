@@ -247,7 +247,7 @@ const updateProduct = async (req, res, next) => {
 
 
         const checktitle = await productModel.findOne({ title, isDeleted: false })
-        if (checktitle) return res.status(400).send({ status: false, msg: "title already exists" });
+        if (checktitle) return res.status(400).send({ status: false, msg: "title already deleted" });
 
         next()
 

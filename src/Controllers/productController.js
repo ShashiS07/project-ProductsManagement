@@ -135,7 +135,7 @@ const deletedProduct = async function (req, res) {
         if (!mongoose.Types.ObjectId.isValid(productId))
             return res.status(400).send({ status: false, msg: "please enter valid productid" })
         const savedata = await productModel.findById(productId)
-        if(!savedata) { return res.status(404).send({status:false, message: "product not found so can't update anything" }) }
+        if(!savedata) { return res.status(404).send({status:false, message: "product not found so can't delete anything" }) }
         
         if (savedata.isDeleted == true) {
             return res.status(200).send({ status: true, message: "product is already deleted" })
