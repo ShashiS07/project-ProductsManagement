@@ -185,8 +185,8 @@ const deleteCart= async function(req,res){
     // if(Object.keys(userData).length==0){return res.status(404).send({status:false,message:"user not exist with thid userId"})}
     
     const cartId=cartData._id
-    const deleteCartData= await cartModel.findOne({_id:cartId},{$set:{totalItems:0,totalPrice:0}})
-    return res.status(200).send({status:true,message:"success",data:deleteCartData})
+    const deleteCartData= await cartModel.findOneAndUpdate({_id:cartId},{$set:{totalItems:0,totalPrice:0}})
+    return res.status(204).send({status:true,message:"success",data:deleteCartData})
         
     } catch (error) {
           res.status(500).send({ status: false, msg: error.message });   
