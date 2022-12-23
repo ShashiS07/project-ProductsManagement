@@ -55,6 +55,7 @@ try{
             return res.status(201).send({status:true,message:"Success",data:updatecart})
         }
     }
+    // add new product
     const cartObject={
         $addToSet:{items:{productId:productId, quantity:1}},
         totalPrice: cartexist.totalPrice + checkProduct.price,
