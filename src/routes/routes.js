@@ -4,7 +4,7 @@ const {createuser,updateUser,Createproduct,updateProduct} = require('../Middlewa
 const auth=require('../Middleware/auth')
 const {createUser,getUser,login,update} = require('../Controllers/userController')
 const {createproduct,updateProductById,getproductById,deletedProduct,getproductbyquery} = require('../Controllers/productController')
-const {createCart}=require("../Controllers/cartController")
+const {createCart,updatecart,getCart,deleteCart}=require("../Controllers/cartController")
 
 
 
@@ -16,11 +16,16 @@ router.post('/users/:userId/cart',auth.authentication,auth.authorization,createC
 router.get('/user/:userId/profile',auth.authentication,getUser)
 router.get('/products',getproductbyquery)
 router.get('/products/:productId',getproductById)
+router.get('/users/:userId/cart',auth.authentication,auth.authorization,getCart)
 
 router.put('/user/:userId/profile',auth.authentication,auth.authorization,updateUser,update)
 router.put('/products/:productId',updateProduct,updateProductById)
+router.put('/users/:userId/cart',auth.authentication,auth.authorization,updatecart)
+
 
 router.delete('/products/:productId',deletedProduct)
+router.delete('/users/:userId/cart',auth.authentication,auth.authorization,deleteCart)
+
 
 
 
