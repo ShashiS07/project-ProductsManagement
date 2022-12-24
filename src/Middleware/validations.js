@@ -15,6 +15,10 @@ const isValid = function (value) {
         return true;
 }
 
+const isValidStatus = (status) => {
+        return ["pending", "completed", "cancelled"].includes(status)
+}
+
 // =============================validation for create User======================================
 const createuser = async (req, res, next) => {
         let data = req.body
@@ -94,43 +98,32 @@ const createuser = async (req, res, next) => {
 }
 // ==================================validation for updateuser===================================
 const updateUser = async function (req, res, next) {
-        try {
-                let data = req.body
-                let { fname, lname, email, phone, password, ...rest } = data
+try {
+        let data = req.body
+        let { fname, lname, email, phone, password, ...rest } = data
 
-                if (Object.keys(rest).length > 0) { return res.status(400).send({ status: false, msg: "Please enter valid key to update" }) }
+        if (Object.keys(rest).length > 0) { return res.status(400).send({ status: false, msg: "Please enter valid key to update" }) }
 
-                if (Object.keys(data).length == 0) return res.status(400).send({ status: false, msg: "please provide info for user to update" })
-                console.log(Boolean(fname));
+        if (Object.keys(data).length == 0) return res.status(400).send({ status: false, msg: "please provide info for user to update" })
 
-                //     if(!fname){
-                //         if (fname=="" || !alphabets.test(fname)) return res.status(400).send({ status: false, msg: "Please Enter Valid First Name" })
-                //     }
+        if (!/^[A-Z a-z]+$/.test(fname.trim())) { return res.status(400).send({ status: false, msg: "Please Enter Valid First Name" }) };
 
-               
-                
-                if (!/^[A-Z a-z]+$/.test(fname.trim())) { return res.status(400).send({ status: false, msg: "Please Enter Valid First Name" }) };
+        if (!/^[A-Z a-z]+$/.test(lname.trim())) { return res.status(400).send({ status: false, msg: "Please Enter Valid last Name" }) }
 
-                if (!/^[A-Z a-z]+$/.test(lname.trim())) { return res.status(400).send({ status: false, msg: "Please Enter Valid last Name" }) }
-
-
-                // if(lname){
-                // if (lname=="" || !alphabets.test(lname)) return res.status(400).send({ status: false, msg: "Please Enter Valid Last Name" })
-                // }
-                if (email) {
-                        if (!emailValidator.validate(email)) {
-                                return res.status(400).send({ status: false, msg: "Please Enter Valid email ID" })
-                        } else {
-                                const chkemail = await userModel.findOne({ email: email })
-                                if (chkemail) return res.status(400).send({ status: false, msg: "email already exists" });
+        if (email) {
+                 if (!emailValidator.validate(email)) {
+                         return res.status(400).send({ status: false, msg: "Please Enter Valid email ID" })
+                } else {
+                        const chkemail = await userModel.findOne({ email: email })
+                        if (chkemail) return res.status(400).send({ status: false, msg: "email already exists" });
                         }
                 }
-                if (phone) {
-                        if (!phoneNumber.test(phone)) {
-                                return res.status(400).send({ status: false, msg: "Please Enter Valid Phone Number" })
+        if (phone) {
+                if (!phoneNumber.test(phone)) {
+                        return res.status(400).send({ status: false, msg: "Please Enter Valid Phone Number" })
                         } else {
-                                const chkPhone = await userModel.findOne({ phone: phone })
-                                if (chkPhone) return res.status(400).send({ status: false, msg: "Phone already exists" });
+                        const chkPhone = await userModel.findOne({ phone: phone })
+                         if (chkPhone) return res.status(400).send({ status: false, msg: "Phone already exists" });
                         }
                 }
                 if (password) {
@@ -242,10 +235,6 @@ const updateProduct = async (req, res, next) => {
                 if (!numbers.test(installments)) return res.status(400).send({ status: false, msg: "Please Enter Valid installment" })
         }
 
-
-
-
-
         const checktitle = await productModel.findOne({ title, isDeleted: false })
         if (checktitle) return res.status(400).send({ status: false, msg: "title already deleted" });
 
@@ -253,5 +242,5 @@ const updateProduct = async (req, res, next) => {
 
 }
 
-module.exports = { createuser, updateUser, Createproduct, updateProduct,isValid }
+module.exports = { createuser, updateUser, Createproduct, updateProduct, isValid, isValidStatus }
 

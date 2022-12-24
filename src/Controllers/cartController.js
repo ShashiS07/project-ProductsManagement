@@ -135,31 +135,28 @@ const updatecart = async (req, res) => {
 }
 
 const getCart= async function(req,res){
-    try {
+    try {     
+    // const cartData= await cartModel.findOne({userId:userId}) 
+    // if(!cartData){return res.status(404).send({status:false,message:"cart does not exist"})}
+    // if(cartData.totalItems==0 && cartData.totalPrice==0){return res.status(200).send({status:true,message:"Cart is already getd"})}
+    // const cartId=cartData._id
     
+    // let cart = await cartModel.findById(cartId)
+    // if(!cart){return res.status(404).send({status:false,message:"no fonund"})}
+    
+    //   if (cart.totalItems==0 || cart.totalPrice == 0)
+    //       return res.status(404).send({ status: false, message: "No cart Found" })
+    
+    // const getCartData= await cartModel.findById({_id:cartId})
+    // return res.status(200).send({status:true,message:"Success",data:getCartData})
     const userId= req.params.userId
-    if(!userId){ return res.status(400).send({status:false,message:"please provide userId"})}
-    if (!mongoose.Types.ObjectId.isValid(userId))
-    return res.status(400).send({ status: false, msg: "please enter valid userId" })
-    
-    const cartData= await cartModel.findOne({userId:userId}) 
-    if(!cartData){return res.status(404).send({status:false,message:"cart does not exist"})}
-    if(cartData.totalItems==0 && cartData.totalPrice==0){return res.status(200).send({status:true,message:"Cart is already getd"})}
-    const cartId=cartData._id
-   
-    // const userData=await userModel.findById(userId)
-    // if(Object.keys(userData).length==0){return res.status(404).send({status:false,message:"user not exist with thid userId"})}
-    let cart = await cartModel.findById(cartId)
-    if(!cart){return res.status(404).send({status:false,message:"no fonund"})}
-
-      if (cart.totalItems==0 || cart.totalPrice == 0)
-          return res.status(404).send({ status: false, message: "No cart Found" })
-          
-    
-  
-    const getCartData= await cartModel.findById({_id:cartId})
-    return res.status(200).send({status:true,message:"Success",data:getCartData})
-        
+    let validCart = await cartModel.findOne({ userId: userId })
+    if (!validCart) return res.status(404).send({ status: false, message: "No cart found" })
+        if(validCart.totalItems==0 || validCart.totalPrice==0 || validCart.items==[]){
+            return res.status(400).send({status:false,message:"Cart is Empty"})
+        }else{
+        return res.status(200).send({ status: true, message: 'Success', data: validCart })
+        }
     } catch (error) {
           res.status(500).send({ status: false, msg: error.message });   
     }
@@ -170,24 +167,14 @@ const deleteCart= async function(req,res){
     try {
     
     const userId= req.params.userId
-    if(!userId){ return res.status(400).send({status:false,message:"please provide userId"})}
-    if (!mongoose.Types.ObjectId.isValid(userId))
-    return res.status(400).send({ status: false, msg: "please enter valid userId" })
     
     const cartData= await cartModel.findOne({userId:userId}) 
     if(!cartData){return res.status(404).send({status:false,message:"cart does not exist"})}
     if(cartData.totalItems==0 && cartData.totalPrice==0){return res.status(200).send({status:true,message:"Cart is already deleted"})}
-    
-    // const token= req.headers['authorization']
-    // const decodeToken= jwt.verify(token,"ProductMnagementGroup24")
-    // if(!decodeToken.userId===userId){return res.status(400).send({status:false,message:"user does not authenticate"})}
-    
-    // const userData=await userModel.findById(userId)
-    // if(Object.keys(userData).length==0){return res.status(404).send({status:false,message:"user not exist with thid userId"})}
-    
+ 
     const cartId=cartData._id
     const deleteCartData= await cartModel.findOneAndUpdate({_id:cartId},{$set:{totalItems:0,totalPrice:0}})
-    return res.status(204).send({status:true,message:"success",data:deleteCartData})
+    return res.status(204).send({status:true,message:"Deleted Successfully"})
         
     } catch (error) {
           res.status(500).send({ status: false, msg: error.message });   
