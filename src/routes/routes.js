@@ -27,8 +27,8 @@ router.put('/users/:userId/cart',auth.authentication,auth.authorization,updateca
 router.delete('/products/:productId',deletedProduct)
 router.delete('/users/:userId/cart',auth.authentication,auth.authorization,deleteCart)
 
-router.post("/users/:userId/orders",createOrder)
-router.put("/users/:userId/orders",updateOrder)
+router.post("/users/:userId/orders",auth.authentication,auth.authorization,createOrder)
+router.put("/users/:userId/orders",auth.authentication,auth.authorization,updateOrder)
 
 
 module.exports = router
