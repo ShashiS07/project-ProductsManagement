@@ -14,7 +14,7 @@ router.post('/login',login)
 router.post('/products',Createproduct,createproduct)
 router.post('/users/:userId/cart',auth.authentication,auth.authorization,createCart)
 
-router.get('/user/:userId/profile',auth.authentication,getUser)
+router.get('/user/:userId/profile',auth.authentication,auth.authorization,getUser)
 router.get('/products',getproductbyquery)
 router.get('/products/:productId',getproductById)
 router.get('/users/:userId/cart',auth.authentication,auth.authorization,getCart)

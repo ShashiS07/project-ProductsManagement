@@ -104,15 +104,15 @@ const createuser = async (req, res, next) => {
 const updateUser = async function (req, res, next) {
 try {
         let data = req.body
-        let { fname, lname, email, phone, password, ...rest } = data
+        let { fname,address, lname, email, phone, password, ...rest } = data
 
         if (Object.keys(rest).length > 0) { return res.status(400).send({ status: false, msg: "Please enter valid key to update" }) }
 
         if (Object.keys(data).length == 0) return res.status(400).send({ status: false, msg: "please provide info for user to update" })
 
-        if (!/^[A-Z a-z]+$/.test(fname.trim())) { return res.status(400).send({ status: false, msg: "Please Enter Valid First Name" }) };
+        if (!alphabets.test(fname)) { return res.status(400).send({ status: false, msg: "Please Enter Valid First Name" }) };
 
-        if (!/^[A-Z a-z]+$/.test(lname.trim())) { return res.status(400).send({ status: false, msg: "Please Enter Valid last Name" }) }
+        if (!alphabets.test(lname)) { return res.status(400).send({ status: false, msg: "Please Enter Valid last Name" }) }
 
         if (email) {
                  if (!emailValidator.validate(email)) {

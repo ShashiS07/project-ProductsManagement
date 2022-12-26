@@ -20,7 +20,7 @@ const createUser = async function (req, res){
         if (!validator.isValidimage(files[0].originalname)) return res.status(400).send({ status: false, message: "File format is not valid" });
 
         let profileImage = await aws.uploadFile(files[0])
-        
+
         const salt = await bcrypt.genSalt(10);
         password = await bcrypt.hash(password, salt);
 
@@ -70,12 +70,12 @@ const login= async function(req,res){
 const getUser=async function(req,res){
   try{
     let userId=req.params.userId
-    console.log(userId);
-    if(!userId) return res.status(400).send({status:false, message:"Please Provide UserID"})
+    // if(!userId) return res.status(400).send({status:false, message:"Please Provide UserID"})
   
-    if(!isValid(userId)) return res.status({status:false, message:"Please Provide valid UserID"})
+    // if(!isValid(userId)) return res.status(400).send({status:false, message:"Please Provide valid UserID"})
+
   
-    if(userId!==req.pass.userId) return res.status(401).send({status:false,message:"Authentication Failed"})
+    // if(userId!==req.pass.userId) return res.status(401).send({status:false,message:"Authentication Failed"})
    
     let userexist=await userModel.findOne({_id:userId})
     if(!userexist) return res.status(404).send({status:false, message:"User not found"})
@@ -115,6 +115,7 @@ try{
       data.password = await bcrypt.hash(password, salt);
     }
     if(files && files.length > 0){
+      if (!validator.isValidimage(files[0].originalname)) return res.status(400).send({ status: false, message: "File format is not valid" });
       let profileImage = await aws.uploadFile(files[0])
       data.profileImage=profileImage
     }
