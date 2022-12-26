@@ -68,8 +68,9 @@ try{
     let checkCart=await cartModel.findOne({userId})
     if(!checkCart) return res.status(404).send({status:false,message:"Cart not found"})
 
-    let checkOrder=await orderModel.findOne({_id:orderId, userId:userId, cancellable:true, isDeleted:false})
+    let checkOrder=await orderModel.findOne({_id:orderId, userId:userId, isDeleted:false})
     if(!checkOrder) return res.status(404).send({status:false, message:"Order not found"})
+    if(checkOrder.cancellable==false) return res.status(400).send({status:false,message:"This order cannot be cancelled"})
 
     let updateOrder= await orderModel.findOneAndUpdate({_id:orderId},{status:status},{new:true})
 
