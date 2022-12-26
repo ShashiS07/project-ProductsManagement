@@ -15,7 +15,12 @@ const createUser = async function (req, res){
         let {fname,lname,email,phone,password,address} = data
         if(typeof (address) == 'string') {address = JSON.parse(address)}
     
+
+        if (files && files.length !== 0) {
+        if (!validator.isValidimage(files[0].originalname)) return res.status(400).send({ status: false, message: "File format is not valid" });
+
         let profileImage = await aws.uploadFile(files[0])
+        
         const salt = await bcrypt.genSalt(10);
         password = await bcrypt.hash(password, salt);
 
@@ -24,8 +29,9 @@ const createUser = async function (req, res){
         const user = await userModel.create(data_to_create);
         return res.status(201).send({ status: true,message:"Success", data: user})
 
-    } catch (error) {res.status(500).send({ status: false, message: error.message })}
-    }
+    } 
+  }catch (error) {res.status(500).send({ status: false, message: error.message })}
+  }
 
 // ========================================login===============================================
 

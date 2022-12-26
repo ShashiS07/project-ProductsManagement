@@ -2,7 +2,7 @@ const emailValidator = require("email-validator");
 const productModel = require("../Model/productModel");
 const userModel = require('../Model/userModel');
 
-let alphabets = /[A-Za-z]/;
+let alphabets = (/^(?=.{1,50}$)[a-z]+(?:['_.\s][a-z]+)*$/i);
 let phoneNumber = /^(?:(?:\+|0{0,2})91(\s*[\-]\s*)?|[0]?)?[6789]\d{9}$/;
 const passwordFormat = /^[a-zA-Z0-9@]{8,15}$/
 const addressformat = /^[a-zA-Z0-9@. ]*$/
@@ -18,13 +18,17 @@ const isValid = function (value) {
 const isValidStatus = (status) => {
         return ["pending", "completed", "cancelled"].includes(status)
 }
-
+const isValidimage = (value) => {
+        let imageRegex = /(\/*\.(?:png|gif|webp|jpeg|jpg))/;
+        if (imageRegex.test(value))
+            return true;
+    }
 // =============================validation for create User======================================
 const createuser = async (req, res, next) => {
         let data = req.body
         let files = req.files
         let { fname, lname, email, phone, password, address } = data
-
+        if (files.length === 0) return res.status(400).send({ status: false, message: "ProfileImage is required" });
         //--------------------------------requirements---------------------------------------------------
         if (Object.keys(data).length == 0) return res.status(400).send({ status: false, msg: "plz provide info for user" })
         if (!fname) { return res.status(400).send({ status: false, message: "Please provide fname " }) }
@@ -32,12 +36,12 @@ const createuser = async (req, res, next) => {
         if (!email) { return res.status(400).send({ status: false, message: "Please provide email " }) }
         if (!phone) { return res.status(400).send({ status: false, message: "Please provide phone " }) }
         if (!password) { return res.status(400).send({ status: false, message: "Please provide password " }) }
-        if (!files) { return res.status(400).send({ status: false, message: "please provide profileImage" }) }
         if (!address) { return res.status(400).send({ status: false, message: "please provide address" }) }
 
         // -----------------------------------------validation------------------------------------
 
         if (!alphabets.test(fname)) return res.status(400).send({ status: false, msg: "Please Enter Valid Name" })
+        if (!alphabets.test(lname)) return res.status(400).send({ status: false, msg: "Please Enter Valid Name" })
         if (!phoneNumber.test(phone)) return res.status(400).send({ status: false, msg: "Please Enter Valid Phone Number" })
         if (!emailValidator.validate(email)) return res.status(400).send({ status: false, msg: "Please Enter Valid email ID" })
         const validPassword = passwordFormat.test(password)
@@ -242,5 +246,5 @@ const updateProduct = async (req, res, next) => {
 
 }
 
-module.exports = { createuser, updateUser, Createproduct, updateProduct, isValid, isValidStatus }
+module.exports = { createuser, updateUser, Createproduct, updateProduct, isValid, isValidStatus,isValidimage }
 
