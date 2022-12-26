@@ -187,15 +187,16 @@ const Createproduct = async (req, res, next) => {
 
         let data = req.body
         let files = req.files
-        let { title, description, style, price, availableSizes, installments } = data;
+        let { title, description, style, price, currencyId, availableSizes, installments,...rest } = data;
         if (!files[0]) { return res.status(400).send({ status: false, msg: "Please provide product image file" }) }
 
         if (Object.keys(data).length == 0) return res.status(400).send({ status: false, msg: "plz provide info for product" })
+        if (Object.keys(rest).length > 0) { return res.status(400).send({ status: false, msg: "Please enter valid key" }) }
         if (!title) { return res.status(400).send({ status: false, message: "Please provide title" }) }
         if (!description) { return res.status(400).send({ status: false, message: "Please provide description" }) }
         if (!price) { return res.status(400).send({ status: false, message: "Please provide price" }) }
         if (!availableSizes) { return res.status(400).send({ status: false, message: "plz provide size" }) }
-
+        if(!currencyId) return res.status(400).send({status:false,message:"CurrencyId is required"})
 
         if (!alphabets.test(title)) return res.status(400).send({ status: false, msg: "Please Enter Valid title" })
         if (!isValid(description)) return res.status(400).send({ status: false, msg: "Please Enter Valid description" })

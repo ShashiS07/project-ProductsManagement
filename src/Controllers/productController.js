@@ -1,6 +1,7 @@
 const aws = require('../aws')
 const mongoose = require('mongoose');
 const productModel = require('../Model/productModel');
+const validator=require("../Middleware/validations")
 const ObjectId = require('mongoose').Types.ObjectId;
 
 
@@ -12,9 +13,10 @@ const createproduct = async function (req, res){
         let product = req.body
         let { title, description, style, price, availableSizes,installments } = product;
         let files = req.files
-
+        if(files && files.length > 0){
+            if (!validator.isValidimage(files[0].originalname)) return res.status(400).send({ status: false, message: "File format is not valid" });
+        }
         const productImage = await aws.uploadFile(files[0])
-
         let currencyId = "INR"
         let currencyFormat = "₹"
         let productCreated = { title, description, price, currencyId, currencyFormat, productImage, style, availableSizes,installments }
@@ -31,7 +33,8 @@ const getproductbyquery=async function(req,res){
     try{
         let data=req.query
 
-        let{size,name,priceGreaterThan,priceLessThan,priceSort}=data
+        let{size,name,priceGreaterThan,priceLessThan,priceSort,...rest}=data
+        if (Object.keys(rest).length > 0) { return res.status(400).send({ status: false, msg: "Please enter valid key" }) }
         let filter={isDeleted:false}
         if(size){
             if(!['S', 'XS', 'M', 'X', 'L', 'XXL', 'XL'].includes(size)){
@@ -59,7 +62,6 @@ const getproductbyquery=async function(req,res){
         if (priceGreaterThan && priceLessThan) {
             filter['price'] = { $lt: priceLessThan, $gt: priceGreaterThan }
         }
-       console.log(priceSort);
         if(priceSort){
         if(!priceSort==1 || !priceSort==-1){
             return res.status(400).send({status:false,message:"Please enter valid pricesort"})
@@ -138,7 +140,7 @@ const deletedProduct = async function (req, res) {
         if(!savedata) { return res.status(404).send({status:false, message: "product not found so can't delete anything" }) }
         
         if (savedata.isDeleted == true) {
-            return res.status(200).send({ status: true, message: "product is already deleted" })
+            return res.status(200).send({ status: true, message: "There is no product exist with this id" })
         }
 
     const deleteproduct = await productModel.findByIdAndUpdate({ _id: productId }, { $set: { isDeleted: true, deletedAt: Date.now() } });
