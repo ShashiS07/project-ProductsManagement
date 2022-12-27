@@ -205,7 +205,7 @@ const Createproduct = async (req, res, next) => {
         if (!numbers.test(price)) return res.status(400).send({ status: false, msg: "Please Enter Valid price" })
         if (availableSizes != "S" && availableSizes != "XS" && availableSizes != "M" && availableSizes != "X" && availableSizes != "L" && availableSizes != "XXL" && availableSizes != "XXL" && availableSizes != "XL") { return res.status(400).send({ msg: "Please provide valid size" }); }
 
-        const checktitle = await productModel.findOne({ title, isDeleted: false })
+        const checktitle = await productModel.findOne({title})
         if (checktitle) return res.status(400).send({ status: false, msg: "title already exists" });
 
         next()
