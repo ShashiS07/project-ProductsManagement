@@ -70,7 +70,11 @@ try{
 
     let checkOrder=await orderModel.findOne({_id:orderId, userId:userId, isDeleted:false})
     if(!checkOrder) return res.status(404).send({status:false, message:"Order not found"})
-    if(checkOrder.cancellable==false) return res.status(400).send({status:false,message:"This order cannot be cancelled"})
+    if(checkOrder.cancellable==false){
+        if(status=="cancelled"){
+            return res.status(400).send({status:false,message:"This order cannot be cancelled"})
+        }
+    }
 
     let updateOrder= await orderModel.findOneAndUpdate({_id:orderId},{status:status},{new:true})
 
@@ -81,3 +85,6 @@ try{
 }    
 }
 module.exports={createOrder,updateOrder}
+
+
+
